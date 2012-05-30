@@ -1,4 +1,4 @@
-%option noyywrap case-insensitive yylineno
+%option noyywrap case-insensitive yylineno outfile="monk-lexer.c" array
 
 %{
 #include <stdio.h>
@@ -9,18 +9,31 @@ void yyerror (char const *);
 
 
 %%
-("Open"|"Go"|"Go to"|"Goto"|"Fetch"|"Get"|"Put"|"Post")([ \t]+)(.+) { 
+^([ \t]*\-[ \t]*)("Open"|"Go"|"Go to"|"Goto"|"Fetch"|"Get")([ \t]+)(.+) { 
 		char * cmd = "http://127.0.0.1/wd/hub/session/$essionId:12345678910/url";
-		char *stuff = strtok (yytext," ");
-		char * url = strtok (NULL, " ");
-		printf( "Run command:%s - with params: {url:%s}\n", cmd, url);
+		char *stuff = strtok (yytext," \t");
+		char * url = strtok (NULL, " \t");
+		url = strtok (NULL, " \t");
+		printf( "\t This should run the Selenium command:%s - with params: {url:%s}\n", cmd, url);
 	}
 
-("Put"|"Post")([ \t]+)(.+) { printf( "placeholder for PUT and POST operations" ); }
+^([ \t]*\-[ \t]*)("Put"|"Post")([ \t]+)(.+) { puts( yytext ); }
 
-("Click")([ \t]+)(.+) { printf( "placeholder for Click events" ); }
+^([ \t]*\-[ \t]*)("Click")([ \t]+)(.+) { 
+		char * cmd = "http://127.0.0.1/wd/hub/session/$essionId:12345678910/click";
+		char *stuff = strtok (yytext," \t");
+		char * elem = strtok (NULL, " \t");
+		elem = strtok (NULL, " \t");
+		printf( "\t This should run the Selenium command:%s - with params: {url:%s}\n", cmd, elem);
+	}
 
-("Type") { printf( "placeholder for Key events events" ); }
+^([ \t]*\-[ \t]*)("Type")([ \t]+)(.+) { 
+		char * cmd = "http://127.0.0.1/wd/hub/session/$essionId:12345678910/send_keys";
+		char *stuff = strtok (yytext," \t");
+		char * elem = strtok (NULL, " \t");
+		elem = strtok (NULL, " \t");
+		printf( "\t This should run the Selenium command:%s - with params: {url:%s}\n", cmd, elem);
+	}
 
 .|\n     /* eat up any unmatched character */
 
