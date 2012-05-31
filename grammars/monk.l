@@ -19,7 +19,7 @@ ANY .+
 WS_ANY {WS}{ANY} 
 
 %%
-{TOK_PREFIX}{TOK_FETCH}{WS_ANY} { 
+{PREFIX}{FETCH}{WS_ANY} { 
 		char * cmd = "http://127.0.0.1/wd/hub/session/$essionId:12345678910/url";
 		char *stuff = strtok (yytext," \t");
 		char * url = strtok (NULL, " \t");
@@ -27,9 +27,9 @@ WS_ANY {WS}{ANY}
 		printf( "\t This should run the Selenium command:%s - with params: {url:%s}\n", cmd, url);
 	}
 
-{TOK_PREFIX}{POST}{WS_ANY}  { puts( yytext ); }
+{PREFIX}{POST}{WS_ANY}  { puts( yytext ); }
 
-{TOK_PREFIX}{WS_ANY}  { 
+{PREFIX}{WS_ANY}  { 
 		char * cmd = "http://127.0.0.1/wd/hub/session/$essionId:12345678910/click";
 		char *stuff = strtok (yytext," \t");
 		char * elem = strtok (NULL, " \t");
@@ -38,7 +38,7 @@ WS_ANY {WS}{ANY}
 	}
 
 /* Splitting on the space doesn't work here. */
-{TOK_PREFIX}{TYPE}{WS}[\"\']{ANY}[\"\'] { 
+{PREFIX}{TYPE}{WS}[\"\']{ANY}[\"\'] { 
 		char * cmd = "http://127.0.0.1/wd/hub/session/$essionId:12345678910/send_keys";
 		char *stuff = strtok (yytext," \t");
 		char * elem = strtok (NULL, " \t");
