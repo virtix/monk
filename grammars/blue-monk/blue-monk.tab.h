@@ -39,10 +39,11 @@
    enum yytokentype {
      PREFIX = 258,
      TARGET = 259,
-     FETCH = 260,
-     POST = 261,
-     ACTION = 262,
-     WS = 263
+     TEXT = 260,
+     FETCH = 261,
+     POST = 262,
+     ACTION = 263,
+     WS = 264
    };
 #endif
 
@@ -60,11 +61,12 @@ typedef union YYSTYPE
   char * target;
   char * fetch;
   char * action;
+  char * text;
 
 
 
 /* Line 2068 of yacc.c  */
-#line 68 "blue-monk.tab.h"
+#line 70 "blue-monk.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

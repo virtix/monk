@@ -9,6 +9,7 @@
 %x GET_COMMAND
 %x CLICK_COMMAND
 %x TYPE_COMMAND
+%x EXPECTATION
 
 %%
 ^([ \t]*\-[ \t]*)("Open"|"Go"|"Go to"|"Goto"|"Fetch"|"Get")  { 
@@ -22,6 +23,14 @@
 <CLICK_COMMAND>([\$\-\_0-9a-zA-Z\.]+) { yylval.target=strdup(yytext); return TARGET;  }
 <CLICK_COMMAND>([ \t]+)	{return WS;}	
 <CLICK_COMMAND>\n { BEGIN INITIAL;}
+
+^([ \t]*\-[ \t]*)("Type") {
+	BEGIN TYPE_COMMAND; yylval.action=strdup(yytext); return ACTION;  }
+<TYPE_COMMAND>(\"[.]*\") { yylval.text=strdup(yytext); return TEXT;  }
+<TYPE_COMMAND>([\$\-\_0-9a-zA-Z\.]+) { yylval.target=strdup(yytext); return TARGET;  }
+<TYPE_COMMAND>([ \t]+)	{return WS;}	
+<TYPE_COMMAND>\n { BEGIN INITIAL;}
+
 .|\n     /* eat up any unmatched character */
 
 
