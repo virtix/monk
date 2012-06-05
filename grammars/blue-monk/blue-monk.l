@@ -10,8 +10,13 @@
 %x CLICK_COMMAND
 %x TYPE_COMMAND
 %x EXPECTATION
+%x TITLE_STATE
 
 %%
+^(#[ \t]+) {BEGIN TITLE_STATE; }
+<TITLE_STATE>(.*) {yylval.text=strdup(yytext); return TITLE;}
+<TITLE_STATE>\n { BEGIN INITIAL;}
+
 ^([ \t]*\-[ \t]*)("Open"|"Go"|"Go to"|"Goto"|"Fetch"|"Get")  { 
 	BEGIN GET_COMMAND; yylval.fetch=strdup(yytext); return FETCH;  }
 <GET_COMMAND>((http[s]?\:\/\/)?[\-\_0-9a-zA-Z\.]+) { yylval.target=strdup(yytext); return TARGET;  }

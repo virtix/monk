@@ -43,7 +43,8 @@
      FETCH = 261,
      POST = 262,
      ACTION = 263,
-     WS = 264
+     WS = 264,
+     TITLE = 265
    };
 #endif
 
@@ -66,7 +67,7 @@ typedef union YYSTYPE
 
 
 /* Line 2068 of yacc.c  */
-#line 70 "blue-monk.tab.h"
+#line 71 "blue-monk.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
