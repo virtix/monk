@@ -17,7 +17,7 @@
 <TITLE_STATE>(.*) {yylval.text=strdup(yytext); return TITLE;}
 <TITLE_STATE>\n { BEGIN INITIAL;}
 
-^([ \t]*\-[ \t]*)("Open"|"Go"|"Go to"|"Goto"|"Fetch"|"Get")  { 
+^([ \t]*(([\-|\*])|([0-9]{1,}\.))[ \t]*)("Open"|"Go"|"Go to"|"Goto"|"Fetch"|"Get")  { 
 	BEGIN GET_COMMAND; yylval.fetch=strdup(yytext); return FETCH;  }
 <GET_COMMAND>((http[s]?\:\/\/)?[\-\_0-9a-zA-Z\.]+) { yylval.target=strdup(yytext); return TARGET;  }
 <GET_COMMAND>([ \t]+)	{return WS;}
