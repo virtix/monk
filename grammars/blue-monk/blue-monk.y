@@ -1,5 +1,3 @@
-
-
 %{
 #include <stdio.h>
 #include <string.h>
@@ -40,7 +38,7 @@ testcase: /* do nothing: test should contain title, description, commands, and t
 
 
 title: /*optional*/
-  | TITLE { printf("Title: %s \n> ", $1); assertEquals("asd","asd") }
+  | TITLE { printf("Title: %s \n> ", $1); assertEquals("asd","asd"); }
  ;
 
 

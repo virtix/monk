@@ -66,7 +66,7 @@
 /* Copy the first part of user declarations.  */
 
 /* Line 268 of yacc.c  */
-#line 3 "blue-monk.y"
+#line 1 "blue-monk.y"
 
 #include <stdio.h>
 #include <string.h>
@@ -119,7 +119,7 @@ typedef union YYSTYPE
 {
 
 /* Line 293 of yacc.c  */
-#line 10 "blue-monk.y"
+#line 8 "blue-monk.y"
 
   struct ast *a;
   char * prefix;
@@ -435,9 +435,9 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    32,    32,    33,    34,    35,    36,    37,    38,    42,
-      43,    47,    51,    52,    53,    54,    58,    59,    60,    63,
-      64,    70,    74
+       0,    30,    30,    31,    32,    33,    34,    35,    36,    40,
+      41,    45,    49,    50,    51,    52,    56,    57,    58,    61,
+      62,    68,    72
 };
 #endif
 
@@ -1371,21 +1371,21 @@ yyreduce:
         case 10:
 
 /* Line 1806 of yacc.c  */
-#line 43 "blue-monk.y"
-    { printf("Title: %s \n> ", (yyvsp[(1) - (1)].text)); assertEquals("asd","asd") ;}
+#line 41 "blue-monk.y"
+    { printf("Title: %s \n> ", (yyvsp[(1) - (1)].text)); assertEquals("asd","asd"); }
     break;
 
   case 17:
 
 /* Line 1806 of yacc.c  */
-#line 59 "blue-monk.y"
+#line 57 "blue-monk.y"
     { printf("Command: Fetch URL = %s\n> ", (yyvsp[(3) - (3)].target)); }
     break;
 
   case 20:
 
 /* Line 1806 of yacc.c  */
-#line 64 "blue-monk.y"
+#line 62 "blue-monk.y"
     { printf("Command: %s = %s\n> ", (yyvsp[(1) - (3)].action), (yyvsp[(3) - (3)].target)); }
     break;
 
@@ -1623,7 +1623,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 87 "blue-monk.y"
+#line 85 "blue-monk.y"
 
 main() {
   yydebug=1;
