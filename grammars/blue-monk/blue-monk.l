@@ -12,24 +12,25 @@
 %x EXPECTATION
 %x TITLE_STATE
 
+BULLET ^([ \t]*(([\-|\*])|([0-9]{1,}\.))[ \t]*)
 %%
 ^(#[ \t]+) {BEGIN TITLE_STATE; }
 <TITLE_STATE>(.*) {yylval.text=strdup(yytext); return TITLE;}
 <TITLE_STATE>\n { BEGIN INITIAL;}
 
-^([ \t]*(([\-|\*])|([0-9]{1,}\.))[ \t]*)("Open"|"Go"|"Go to"|"Goto"|"Fetch"|"Get")  { 
+{BULLET}("Open"|"Go"|"Go to"|"Goto"|"Fetch"|"Get")  { 
 	BEGIN GET_COMMAND; yylval.fetch=strdup(yytext); return FETCH;  }
 <GET_COMMAND>((http[s]?\:\/\/)?[\-\_0-9a-zA-Z\.]+) { yylval.target=strdup(yytext); return TARGET;  }
 <GET_COMMAND>([ \t]+)	{return WS;}
 <GET_COMMAND>\n { BEGIN INITIAL;}
 
-^([ \t]*\-[ \t]*)("Click"|"Click on") {
+{BULLET}("Click"|"Click on") {
 	BEGIN CLICK_COMMAND; yylval.action=strdup(yytext); return ACTION;  }
 <CLICK_COMMAND>([\$\-\_0-9a-zA-Z\.]+) { yylval.target=strdup(yytext); return TARGET;  }
 <CLICK_COMMAND>([ \t]+)	{return WS;}	
 <CLICK_COMMAND>\n { BEGIN INITIAL;}
 
-^([ \t]*\-[ \t]*)("Type") {
+{BULLET}("Type") {
 	BEGIN TYPE_COMMAND; yylval.action=strdup(yytext); return ACTION;  }
 <TYPE_COMMAND>(\"[.]*\") { yylval.text=strdup(yytext); return TEXT;  }
 <TYPE_COMMAND>([\$\-\_0-9a-zA-Z\.]+) { yylval.target=strdup(yytext); return TARGET;  }

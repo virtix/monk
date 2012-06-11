@@ -55,7 +55,7 @@ typedef union YYSTYPE
 {
 
 /* Line 2068 of yacc.c  */
-#line 8 "blue-monk.y"
+#line 10 "blue-monk.y"
 
   struct ast *a;
   char * prefix;
