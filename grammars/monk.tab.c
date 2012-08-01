@@ -66,7 +66,7 @@
 /* Copy the first part of user declarations.  */
 
 /* Line 268 of yacc.c  */
-#line 1 "blue-monk.y"
+#line 1 "monk.y"
 
 #include <stdio.h>
 #include <string.h>
@@ -74,7 +74,7 @@
 
 
 /* Line 268 of yacc.c  */
-#line 78 "blue-monk.tab.c"
+#line 78 "monk.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -119,7 +119,7 @@ typedef union YYSTYPE
 {
 
 /* Line 293 of yacc.c  */
-#line 8 "blue-monk.y"
+#line 8 "monk.y"
 
   struct ast *a;
   char * prefix;
@@ -131,7 +131,7 @@ typedef union YYSTYPE
 
 
 /* Line 293 of yacc.c  */
-#line 135 "blue-monk.tab.c"
+#line 135 "monk.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -143,7 +143,7 @@ typedef union YYSTYPE
 
 
 /* Line 343 of yacc.c  */
-#line 147 "blue-monk.tab.c"
+#line 147 "monk.tab.c"
 
 #ifdef short
 # undef short
@@ -1371,28 +1371,28 @@ yyreduce:
         case 10:
 
 /* Line 1806 of yacc.c  */
-#line 41 "blue-monk.y"
+#line 41 "monk.y"
     { printf("Title: %s \n> ", (yyvsp[(1) - (1)].text)); assertEquals("asd","asd"); }
     break;
 
   case 17:
 
 /* Line 1806 of yacc.c  */
-#line 57 "blue-monk.y"
+#line 57 "monk.y"
     { printf("Command: Fetch URL = %s\n> ", (yyvsp[(3) - (3)].target)); }
     break;
 
   case 20:
 
 /* Line 1806 of yacc.c  */
-#line 62 "blue-monk.y"
+#line 62 "monk.y"
     { printf("Command: %s = %s\n> ", (yyvsp[(1) - (3)].action), (yyvsp[(3) - (3)].target)); }
     break;
 
 
 
 /* Line 1806 of yacc.c  */
-#line 1396 "blue-monk.tab.c"
+#line 1396 "monk.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1623,7 +1623,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 85 "blue-monk.y"
+#line 85 "monk.y"
 
 main() {
   yydebug=1;

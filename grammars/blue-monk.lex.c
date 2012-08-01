@@ -1,6 +1,6 @@
-#line 2 "monk.lex.c"
+#line 2 "blue-monk.lex.c"
 
-#line 4 "monk.lex.c"
+#line 4 "blue-monk.lex.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -606,7 +606,7 @@ char *yytext;
 /**
   This lexeme needs to be in the form of: -<WS>, *<WS>, 1.<WS>
 */
-#line 610 "monk.lex.c"
+#line 610 "blue-monk.lex.c"
 
 #define INITIAL 0
 #define COMMAND 1
@@ -804,7 +804,7 @@ YY_DECL
     
 #line 20 "monk.l"
 
-#line 808 "monk.lex.c"
+#line 808 "blue-monk.lex.c"
 
 	if ( !(yy_init) )
 		{
@@ -1018,7 +1018,7 @@ YY_RULE_SETUP
 #line 58 "monk.l"
 ECHO;
 	YY_BREAK
-#line 1022 "monk.lex.c"
+#line 1022 "blue-monk.lex.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMAND):
 case YY_STATE_EOF(GET_COMMAND):

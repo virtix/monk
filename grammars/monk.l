@@ -1,8 +1,8 @@
-%option noyywrap case-insensitive yylineno outfile="blue-monk.lex.c" 
+%option noyywrap case-insensitive yylineno outfile="monk.lex.c" 
 
 
 %{
-#include "blue-monk.tab.h"
+#include "monk.tab.h"
 %}
 
 %x COMMAND
