@@ -11,6 +11,7 @@
   char * target;
   char * fetch;
   char * action;
+  char * taction;
   char * text;
 }
 
@@ -21,8 +22,10 @@
 %token <fetch>FETCH
 %token <fetch>POST
 %token <action>ACTION
+%token <taction>TYPE_ACTION
 %token WS
 %token <text>TITLE
+%token <text>IN
 
 
 %%
@@ -38,7 +41,7 @@ testcase: /* do nothing: test should contain title, description, commands, and t
 
 
 title: /*optional*/
-  | TITLE { printf("Title: %s \n> ", $1); assertEquals("asd","asd"); }
+  | TITLE { printf("Title: %s \n> ", $1); }
  ;
 
 
@@ -49,6 +52,7 @@ description: /*optional*/
 command:  testcase
   | testcase fetch_command
   | testcase click_command
+  | testcase text_command
   | command 
  ;
 
@@ -63,6 +67,7 @@ click_command: /**/
   ;
 
 text_command: /*optional*/
+  | TYPE_ACTION WS TEXT WS IN WS TARGET { printf("Command: %s %s %s %s \n> ", $1, $3, $5, $7); }
   ;
 
 option: /*optional*/

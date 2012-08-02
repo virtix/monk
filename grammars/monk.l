@@ -38,10 +38,11 @@ BULLET ([ \t]*(([\-|\*])|([0-9]{1,}\.))[ \t]+)
 
 
 ^{BULLET}("Type") {
-	BEGIN TYPE_COMMAND; yylval.action=strdup(yytext); return ACTION;  }
-<TYPE_COMMAND>(\"[.]*\") { yylval.text=strdup(yytext); return TEXT;  }
+	BEGIN TYPE_COMMAND; yylval.action=strdup(yytext); return TYPE_ACTION;  }
+<TYPE_COMMAND>([\"|\'|_].+[\"|\'|_]) { yylval.text=strdup(yytext); return TEXT; }
+<TYPE_COMMAND>("INTO"|"IN") { yylval.text=strdup(yytext); return IN; }
 <TYPE_COMMAND>([\$\-\_0-9a-zA-Z\.]+) { yylval.target=strdup(yytext); return TARGET;  }
-<TYPE_COMMAND>([ \t]+)	{return WS;}	
+<TYPE_COMMAND>([ \t]+)	{return WS;}
 <TYPE_COMMAND>\n { BEGIN INITIAL;}
 
 
