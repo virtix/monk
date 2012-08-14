@@ -70,11 +70,12 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 #define YYDEBUG 1
 
 
 /* Line 268 of yacc.c  */
-#line 78 "monk.tab.c"
+#line 79 "monk.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -106,11 +107,12 @@
      TEXT = 260,
      FETCH = 261,
      POST = 262,
-     ACTION = 263,
-     TYPE_ACTION = 264,
-     WS = 265,
-     TITLE = 266,
-     IN = 267
+     CLICK = 263,
+     TYPE = 264,
+     ASSERT = 265,
+     WS = 266,
+     TITLE = 267,
+     IN = 268
    };
 #endif
 
@@ -121,7 +123,7 @@ typedef union YYSTYPE
 {
 
 /* Line 293 of yacc.c  */
-#line 8 "monk.y"
+#line 9 "monk.y"
 
   struct ast *a;
   char * prefix;
@@ -134,7 +136,7 @@ typedef union YYSTYPE
 
 
 /* Line 293 of yacc.c  */
-#line 138 "monk.tab.c"
+#line 140 "monk.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -146,7 +148,7 @@ typedef union YYSTYPE
 
 
 /* Line 343 of yacc.c  */
-#line 150 "monk.tab.c"
+#line 152 "monk.tab.c"
 
 #ifdef short
 # undef short
@@ -365,10 +367,10 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  8
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   14
+#define YYLAST   15
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  13
+#define YYNTOKENS  14
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  10
 /* YYNRULES -- Number of rules.  */
@@ -378,7 +380,7 @@ union yyalloc
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   267
+#define YYMAXUTOK   268
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -412,7 +414,7 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11,    12
+       5,     6,     7,     8,     9,    10,    11,    12,    13
 };
 
 #if YYDEBUG
@@ -428,20 +430,20 @@ static const yytype_uint8 yyprhs[] =
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      14,     0,    -1,    -1,    15,    -1,    16,    -1,    17,    -1,
-      22,    -1,    21,    -1,    14,    -1,    -1,    11,    -1,    -1,
-      14,    -1,    14,    18,    -1,    14,    19,    -1,    14,    20,
-      -1,    17,    -1,    -1,     6,    10,     4,    -1,    18,    -1,
-      -1,     8,    10,     4,    -1,    -1,     9,    10,     5,    10,
-      12,    10,     4,    -1,    -1,    -1
+      15,     0,    -1,    -1,    16,    -1,    17,    -1,    18,    -1,
+      23,    -1,    22,    -1,    15,    -1,    -1,    12,    -1,    -1,
+      15,    -1,    15,    19,    -1,    15,    20,    -1,    15,    21,
+      -1,    18,    -1,    -1,     6,    11,     4,    -1,    19,    -1,
+      -1,     8,    11,     4,    -1,    -1,     9,    11,     5,    11,
+      13,    11,     4,    -1,    -1,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    33,    33,    34,    35,    36,    37,    38,    39,    43,
-      44,    48,    52,    53,    54,    55,    56,    60,    61,    62,
-      65,    66,    69,    70,    73,    77
+       0,    35,    35,    36,    37,    38,    39,    40,    41,    45,
+      46,    50,    54,    55,    56,    57,    58,    62,    63,    64,
+      67,    68,    71,    72,    75,    79
 };
 #endif
 
@@ -451,7 +453,7 @@ static const yytype_uint8 yyrline[] =
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "PREFIX", "TARGET", "TEXT", "FETCH",
-  "POST", "ACTION", "TYPE_ACTION", "WS", "TITLE", "IN", "$accept",
+  "POST", "CLICK", "TYPE", "ASSERT", "WS", "TITLE", "IN", "$accept",
   "testcase", "title", "description", "command", "fetch_command",
   "click_command", "text_command", "option", "tag", 0
 };
@@ -463,16 +465,16 @@ static const char *const yytname[] =
 static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267
+     265,   266,   267,   268
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    13,    14,    14,    14,    14,    14,    14,    14,    15,
-      15,    16,    17,    17,    17,    17,    17,    18,    18,    18,
-      19,    19,    20,    20,    21,    22
+       0,    14,    15,    15,    15,    15,    15,    15,    15,    16,
+      16,    17,    18,    18,    18,    18,    18,    19,    19,    19,
+      20,    20,    21,    21,    22,    23
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -501,18 +503,18 @@ static const yytype_int8 yydefgoto[] =
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -11
+#define YYPACT_NINF -12
 static const yytype_int8 yypact[] =
 {
-     -10,   -11,     0,   -11,   -11,   -11,   -11,   -11,   -11,    -8,
-      -7,    -6,   -11,   -11,   -11,     1,     3,     5,   -11,   -11,
-       2,    -1,     4,     9,   -11
+     -11,   -12,     0,   -12,   -12,   -12,   -12,   -12,   -12,    -9,
+      -8,    -7,   -12,   -12,   -12,     1,     3,     5,   -12,   -12,
+       2,    -2,     4,     8,   -12
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -11,   -11,   -11,   -11,   -11,   -11,   -11,   -11,   -11,   -11
+     -12,   -12,   -12,   -12,   -12,   -12,   -12,   -12,   -12,   -12
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -522,28 +524,28 @@ static const yytype_int8 yypgoto[] =
 static const yytype_uint8 yytable[] =
 {
        8,     1,    15,    16,    17,    18,     9,    19,    10,    11,
-      20,    22,    21,    24,    23
+      20,    22,    24,    21,     0,    23
 };
 
 #define yypact_value_is_default(yystate) \
-  ((yystate) == (-11))
+  ((yystate) == (-12))
 
 #define yytable_value_is_error(yytable_value) \
   YYID (0)
 
-static const yytype_uint8 yycheck[] =
+static const yytype_int8 yycheck[] =
 {
-       0,    11,    10,    10,    10,     4,     6,     4,     8,     9,
-       5,    12,    10,     4,    10
+       0,    12,    11,    11,    11,     4,     6,     4,     8,     9,
+       5,    13,     4,    11,    -1,    11
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    11,    14,    15,    16,    17,    21,    22,     0,     6,
-       8,     9,    18,    19,    20,    10,    10,    10,     4,     4,
-       5,    10,    12,    10,     4
+       0,    12,    15,    16,    17,    18,    22,    23,     0,     6,
+       8,     9,    19,    20,    21,    11,    11,    11,     4,     4,
+       5,    11,    13,    11,     4
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1380,35 +1382,35 @@ yyreduce:
         case 10:
 
 /* Line 1806 of yacc.c  */
-#line 44 "monk.y"
+#line 46 "monk.y"
     { printf("Title: %s \n> ", (yyvsp[(1) - (1)].text)); }
     break;
 
   case 18:
 
 /* Line 1806 of yacc.c  */
-#line 61 "monk.y"
-    { printf("Command: Fetch URL = %s\n> ", (yyvsp[(3) - (3)].target)); }
+#line 63 "monk.y"
+    { printf("Command: Fetch URL = %s\n> ", (yyvsp[(3) - (3)].target));  }
     break;
 
   case 21:
 
 /* Line 1806 of yacc.c  */
-#line 66 "monk.y"
+#line 68 "monk.y"
     { printf("Command: %s = %s\n> ", (yyvsp[(1) - (3)].action), (yyvsp[(3) - (3)].target)); }
     break;
 
   case 23:
 
 /* Line 1806 of yacc.c  */
-#line 70 "monk.y"
-    { printf("Command: %s %s %s %s \n> ", (yyvsp[(1) - (7)].taction), (yyvsp[(3) - (7)].text), (yyvsp[(5) - (7)].text), (yyvsp[(7) - (7)].target)); }
+#line 72 "monk.y"
+    { printf("Command: %s %s %s %s \n> ", (yyvsp[(1) - (7)].action), (yyvsp[(3) - (7)].text), (yyvsp[(5) - (7)].text), (yyvsp[(7) - (7)].target)); }
     break;
 
 
 
 /* Line 1806 of yacc.c  */
-#line 1412 "monk.tab.c"
+#line 1414 "monk.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1639,7 +1641,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 90 "monk.y"
+#line 92 "monk.y"
 
 main() {
   yydebug=1;
@@ -1660,18 +1662,12 @@ yyerror(char *s) {
   To Do: Unit test helpers. Use this to test the parser prior to adding
   actions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-void assert(char *expression){
-  
-}
+
 
 
 void assertEquals(char *expected, char *actual){
-  if( strcmp(expected, actual) != 0 ){
-    printf ("\n> FAIL: %s != %$ \n", expected,actual);
-  }
-  else {
-    printf ("\n> Test OK.\n");
-  }
+  assert( strcmp(expected, actual) != 0 );
+  printf ("\n> Test OK.\n");
 }
 
 

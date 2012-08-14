@@ -31,23 +31,23 @@ BULLET ([ \t]*(([\-|\*])|([0-9]{1,}\.))[ \t]+)
 
 
 ^{BULLET}("Click"|"Click on") {
-	BEGIN CLICK_COMMAND; yylval.action=strdup(yytext); return ACTION;  }
+	BEGIN CLICK_COMMAND; yylval.action=strdup(yytext); return CLICK;  }
 <CLICK_COMMAND>([\$\-\_0-9a-zA-Z\.]+) { yylval.target=strdup(yytext); return TARGET;  }
 <CLICK_COMMAND>([ \t]+)	{return WS;}
 <CLICK_COMMAND>\n { BEGIN INITIAL;}
 
 
 ^{BULLET}("Type") {
-	BEGIN TYPE_COMMAND; yylval.action=strdup(yytext); return TYPE_ACTION;  }
+	BEGIN TYPE_COMMAND; yylval.action=strdup(yytext); return TYPE;  }
 <TYPE_COMMAND>([\"|\'|_].+[\"|\'|_]) { yylval.text=strdup(yytext); return TEXT; }
 <TYPE_COMMAND>("INTO"|"IN") { yylval.text=strdup(yytext); return IN; }
 <TYPE_COMMAND>([\$\-\_0-9a-zA-Z\.]+) { yylval.target=strdup(yytext); return TARGET;  }
 <TYPE_COMMAND>([ \t]+)	{return WS;}
 <TYPE_COMMAND>\n { BEGIN INITIAL;}
 
-
-^{BULLET}("Expect"|"Expect that"|"Assert"|"Assert that") {
-	BEGIN EXPECTATION; yylval.action=strdup(yytext); return ACTION;  }
+^{BULLET}("Expect"|"Expect that"|"Assert"|"Assert that"|"Verify"|"Verify that") {
+	BEGIN EXPECTATION; yylval.action=strdup(yytext); return ASSERT;  }
+<EXPECTATION>("Title"|"URL"|"Body") { yylval.target=strdup(yytext); return TARGET;  }	
 <EXPECTATION>([\$\-\_0-9a-zA-Z\.]+) { yylval.target=strdup(yytext); return TARGET;  }
 <EXPECTATION>([ \t]+)	{return WS;}
 <EXPECTATION>\n { BEGIN INITIAL;}
