@@ -594,9 +594,9 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "blue-monk.l"
-#line 5 "blue-monk.l"
-#include "blue-monk.tab.h"
+#line 1 "monk.l"
+#line 5 "monk.l"
+#include "monk.tab.h"
 
 
 
@@ -802,7 +802,7 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 20 "blue-monk.l"
+#line 20 "monk.l"
 
 #line 808 "blue-monk.lex.c"
 
@@ -900,122 +900,122 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 21 "blue-monk.l"
+#line 21 "monk.l"
 {BEGIN TITLE_STATE; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 22 "blue-monk.l"
+#line 22 "monk.l"
 {yylval.text=strdup(yytext); return TITLE;}
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 23 "blue-monk.l"
+#line 23 "monk.l"
 { BEGIN INITIAL;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 26 "blue-monk.l"
+#line 26 "monk.l"
 { 
 	BEGIN GET_COMMAND; yylval.fetch=strdup(yytext); return FETCH;  }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 28 "blue-monk.l"
+#line 28 "monk.l"
 { yylval.target=strdup(yytext); return TARGET;  }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 29 "blue-monk.l"
+#line 29 "monk.l"
 {return WS;}
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 30 "blue-monk.l"
+#line 30 "monk.l"
 { BEGIN INITIAL;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 33 "blue-monk.l"
+#line 33 "monk.l"
 {
 	BEGIN CLICK_COMMAND; yylval.action=strdup(yytext); return ACTION;  }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 35 "blue-monk.l"
+#line 35 "monk.l"
 { yylval.target=strdup(yytext); return TARGET;  }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 36 "blue-monk.l"
+#line 36 "monk.l"
 {return WS;}
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 37 "blue-monk.l"
+#line 37 "monk.l"
 { BEGIN INITIAL;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 40 "blue-monk.l"
+#line 40 "monk.l"
 {
 	BEGIN TYPE_COMMAND; yylval.action=strdup(yytext); return ACTION;  }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 42 "blue-monk.l"
+#line 42 "monk.l"
 { yylval.text=strdup(yytext); return TEXT;  }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 43 "blue-monk.l"
+#line 43 "monk.l"
 { yylval.target=strdup(yytext); return TARGET;  }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 44 "blue-monk.l"
+#line 44 "monk.l"
 {return WS;}	
 	YY_BREAK
 case 16:
 /* rule 16 can match eol */
 YY_RULE_SETUP
-#line 45 "blue-monk.l"
+#line 45 "monk.l"
 { BEGIN INITIAL;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 48 "blue-monk.l"
+#line 48 "monk.l"
 {
 	BEGIN EXPECTATION; yylval.action=strdup(yytext); return ACTION;  }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 50 "blue-monk.l"
+#line 50 "monk.l"
 { yylval.target=strdup(yytext); return TARGET;  }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 51 "blue-monk.l"
+#line 51 "monk.l"
 {return WS;}
 	YY_BREAK
 case 20:
 /* rule 20 can match eol */
 YY_RULE_SETUP
-#line 52 "blue-monk.l"
+#line 52 "monk.l"
 { BEGIN INITIAL;}
 	YY_BREAK
 case 21:
 /* rule 21 can match eol */
 YY_RULE_SETUP
-#line 55 "blue-monk.l"
+#line 55 "monk.l"
 /* eat up any unmatched character */
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 58 "blue-monk.l"
+#line 58 "monk.l"
 ECHO;
 	YY_BREAK
 #line 1022 "blue-monk.lex.c"
@@ -2036,7 +2036,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 58 "blue-monk.l"
+#line 58 "monk.l"
 
 
 

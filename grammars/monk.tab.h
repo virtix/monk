@@ -42,9 +42,12 @@
      TEXT = 260,
      FETCH = 261,
      POST = 262,
-     ACTION = 263,
-     WS = 264,
-     TITLE = 265
+     CLICK = 263,
+     TYPE = 264,
+     ASSERT = 265,
+     WS = 266,
+     TITLE = 267,
+     IN = 268
    };
 #endif
 
@@ -55,19 +58,20 @@ typedef union YYSTYPE
 {
 
 /* Line 2068 of yacc.c  */
-#line 8 "blue-monk.y"
+#line 9 "monk.y"
 
   struct ast *a;
   char * prefix;
   char * target;
   char * fetch;
   char * action;
+  char * taction;
   char * text;
 
 
 
 /* Line 2068 of yacc.c  */
-#line 71 "blue-monk.tab.h"
+#line 75 "monk.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

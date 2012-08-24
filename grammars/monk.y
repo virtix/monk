@@ -1,6 +1,7 @@
 %{
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 #define YYDEBUG 1
 %}
 
@@ -11,6 +12,7 @@
   char * target;
   char * fetch;
   char * action;
+  char * taction;
   char * text;
 }
 
@@ -20,9 +22,12 @@
 %token <text>TEXT
 %token <fetch>FETCH
 %token <fetch>POST
-%token <action>ACTION
+%token <action>CLICK
+%token <action>TYPE
+%token <action>ASSERT
 %token WS
 %token <text>TITLE
+%token <text>IN
 
 
 %%
@@ -38,7 +43,7 @@ testcase: /* do nothing: test should contain title, description, commands, and t
 
 
 title: /*optional*/
-  | TITLE { printf("Title: %s \n> ", $1); assertEquals("asd","asd"); }
+  | TITLE { printf("Title: %s \n> ", $1); }
  ;
 
 
@@ -49,20 +54,22 @@ description: /*optional*/
 command:  testcase
   | testcase fetch_command
   | testcase click_command
+  | testcase text_command
   | command 
  ;
 
 
 fetch_command: /**/
-  | FETCH WS TARGET { printf("Command: Fetch URL = %s\n> ", $3); }
+  | FETCH WS TARGET { printf("Command: Fetch URL = %s\n> ", $3);  }
   | fetch_command
   ;
 
 click_command: /**/
-  | ACTION WS TARGET { printf("Command: %s = %s\n> ", $1, $3); }
+  | CLICK WS TARGET { printf("Command: %s = %s\n> ", $1, $3); }
   ;
 
 text_command: /*optional*/
+  | TYPE WS TEXT WS IN WS TARGET { printf("Command: %s %s %s %s \n> ", $1, $3, $5, $7); }
   ;
 
 option: /*optional*/
@@ -102,17 +109,11 @@ yyerror(char *s) {
   To Do: Unit test helpers. Use this to test the parser prior to adding
   actions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-void assert(char *expression){
-  
-}
+
 
 
 void assertEquals(char *expected, char *actual){
-  if( strcmp(expected, actual) != 0 ){
-    printf ("\n> FAIL: %s != %$ \n", expected,actual);
-  }
-  else {
-    printf ("\n> Test OK.\n");
-  }
+  assert( strcmp(expected, actual) != 0 );
+  printf ("\n> Test OK.\n");
 }
 
