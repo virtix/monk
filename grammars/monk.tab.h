@@ -45,9 +45,12 @@
      CLICK = 263,
      TYPE = 264,
      ASSERT = 265,
-     WS = 266,
-     TITLE = 267,
-     IN = 268
+     TITLE = 266,
+     LINE = 267,
+     IN = 268,
+     IS = 269,
+     HASH = 270,
+     WS = 271
    };
 #endif
 
@@ -58,7 +61,7 @@ typedef union YYSTYPE
 {
 
 /* Line 2068 of yacc.c  */
-#line 9 "monk.y"
+#line 20 "monk.y"
 
   struct ast *a;
   char * prefix;
@@ -71,7 +74,7 @@ typedef union YYSTYPE
 
 
 /* Line 2068 of yacc.c  */
-#line 75 "monk.tab.h"
+#line 78 "monk.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

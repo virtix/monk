@@ -3,6 +3,17 @@
 #include <string.h>
 #include <assert.h>
 #define YYDEBUG 1
+#define YYERROR_VERBOSE
+int yylex (void);
+// void yyerror (char const *);
+
+typedef struct YYLTYPE {
+     int first_line;
+     int first_column;
+     int last_line;
+     int last_column;
+    } YYLTYPE;
+
 %}
 
 
@@ -25,52 +36,68 @@
 %token <action>CLICK
 %token <action>TYPE
 %token <action>ASSERT
-%token WS
 %token <text>TITLE
-%token <text>IN
+%token <text>LINE
+%token IN
+%token IS
+
+%token HASH
+%token WS
+
+%start testcase
 
 
 %%
 
 testcase: /* do nothing: test should contain title, description, commands, and tags */
-  | title 
-  | description
-  | command
-  | tag
-  | option
-  | testcase
+  | testcase title 
+  | testcase description
+  | testcase command
+  | testcase tag
+  | testcase option
  ;
 
-
+/*| TITLE { printf("Title: %s \n> ", $1); }*/
 title: /*optional*/
-  | TITLE { printf("Title: %s \n> ", $1); }
+  |  TITLE { printf("Title: %s \n> ", $1); }
  ;
+
+/*|  error { yyerrok;                  }*/
 
 
 description: /*optional*/
  ;  
 
 
-command:  testcase
-  | testcase fetch_command
-  | testcase click_command
-  | testcase text_command
-  | command 
+command:  
+  |  fetch_command
+  |  click_command
+  |  text_command
+  |  verify_command
+  |  command
  ;
 
 
-fetch_command: /**/
-  | FETCH WS TARGET { printf("Command: Fetch URL = %s\n> ", $3);  }
-  | fetch_command
+fetch_command: 
+  | FETCH WS TARGET { printf("Command: Fetch URL = %s\n> ", $3);  } 
+  | command
   ;
 
 click_command: /**/
   | CLICK WS TARGET { printf("Command: %s = %s\n> ", $1, $3); }
+  | command
   ;
 
 text_command: /*optional*/
-  | TYPE WS TEXT WS IN WS TARGET { printf("Command: %s %s %s %s \n> ", $1, $3, $5, $7); }
+  | TYPE WS TEXT WS IN WS TARGET { printf("Command: %s %s Into %s \n> ", $1, $3, $7); }
+  | command
   ;
+
+
+verify_command: /*optional*/
+  | ASSERT WS TARGET WS IS WS TEXT { printf("Command: %s %s Equals %s \n> ", $1, $3, $7); }
+  | command
+  ;  
 
 option: /*optional*/
  ;
