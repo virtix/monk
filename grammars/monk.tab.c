@@ -71,6 +71,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <curl/curl.h>
+#include <curl/easy.h>
 #define YYDEBUG 1
 #define YYERROR_VERBOSE
 int yylex (void);
@@ -86,7 +88,7 @@ typedef struct YYLTYPE {
 
 
 /* Line 268 of yacc.c  */
-#line 90 "monk.tab.c"
+#line 92 "monk.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -137,7 +139,7 @@ typedef union YYSTYPE
 {
 
 /* Line 293 of yacc.c  */
-#line 20 "monk.y"
+#line 22 "monk.y"
 
   struct ast *a;
   char * prefix;
@@ -150,7 +152,7 @@ typedef union YYSTYPE
 
 
 /* Line 293 of yacc.c  */
-#line 154 "monk.tab.c"
+#line 156 "monk.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -162,7 +164,7 @@ typedef union YYSTYPE
 
 
 /* Line 343 of yacc.c  */
-#line 166 "monk.tab.c"
+#line 168 "monk.tab.c"
 
 #ifdef short
 # undef short
@@ -459,10 +461,10 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    52,    52,    53,    54,    55,    56,    57,    61,    62,
-      68,    72,    73,    74,    75,    76,    77,    81,    82,    83,
-      86,    87,    88,    91,    92,    93,    97,    98,    99,   102,
-     106
+       0,    54,    54,    55,    56,    57,    58,    59,    63,    64,
+      70,    74,    75,    76,    77,    78,    79,    83,    84,   106,
+     109,   110,   111,   114,   115,   116,   120,   121,   122,   125,
+     129
 };
 #endif
 
@@ -1411,42 +1413,63 @@ yyreduce:
         case 9:
 
 /* Line 1806 of yacc.c  */
-#line 62 "monk.y"
+#line 64 "monk.y"
     { printf("Title: %s \n> ", (yyvsp[(1) - (1)].text)); }
     break;
 
   case 18:
 
 /* Line 1806 of yacc.c  */
-#line 82 "monk.y"
-    { printf("Command: Fetch URL = %s\n> ", (yyvsp[(3) - (3)].target));  }
+#line 84 "monk.y"
+    { printf("Command: Fetch URL = %s\n> ", (yyvsp[(3) - (3)].target));  
+      CURL *curl;
+      CURLcode res;
+     
+      curl = curl_easy_init();
+      if(curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, (yyvsp[(3) - (3)].target));
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+     
+        /* Perform the request, res will get the return code */ 
+        res = curl_easy_perform(curl);
+        printf("%s\n", res);
+        /* Check for errors */ 
+        if(res != CURLE_OK)
+          fprintf(stderr, "curl_easy_perform() failed: %s\n",
+                  curl_easy_strerror(res));
+     
+        /* always cleanup */ 
+        curl_easy_cleanup(curl);
+      }
+
+  }
     break;
 
   case 21:
 
 /* Line 1806 of yacc.c  */
-#line 87 "monk.y"
-    { printf("Command: %s = %s\n> ", (yyvsp[(1) - (3)].action), (yyvsp[(3) - (3)].target)); }
+#line 110 "monk.y"
+    { printf("Command: Click target = %s\n> ", (yyvsp[(3) - (3)].target)); }
     break;
 
   case 24:
 
 /* Line 1806 of yacc.c  */
-#line 92 "monk.y"
-    { printf("Command: %s %s Into %s \n> ", (yyvsp[(1) - (7)].action), (yyvsp[(3) - (7)].text), (yyvsp[(7) - (7)].target)); }
+#line 115 "monk.y"
+    { printf("Command: Type %s Into %s \n> ", (yyvsp[(3) - (7)].text), (yyvsp[(7) - (7)].target)); }
     break;
 
   case 27:
 
 /* Line 1806 of yacc.c  */
-#line 98 "monk.y"
-    { printf("Command: %s %s Equals %s \n> ", (yyvsp[(1) - (7)].action), (yyvsp[(3) - (7)].target), (yyvsp[(7) - (7)].text)); }
+#line 121 "monk.y"
+    { printf("Command: Assert that %s Equals %s \n> ",  (yyvsp[(3) - (7)].target), (yyvsp[(7) - (7)].text)); }
     break;
 
 
 
 /* Line 1806 of yacc.c  */
-#line 1450 "monk.tab.c"
+#line 1473 "monk.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1677,10 +1700,26 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 119 "monk.y"
+#line 142 "monk.y"
 
-main() {
+
+extern FILE *yyin;
+extern int yy_scan_string(const char *);
+// extern void reset_lexer(void);
+// extern void reset_parser(void);
+
+int main(int argc,char** argv) {
   yydebug=1;
+
+  if ( argc == 2 ) {
+      yyin = fopen( argv[1], "r" );
+      // reset_lexer();
+      // reset_parser();
+      yyparse();
+      return(1);
+      /*Exit program  from here */
+    }
+
   printf("> "); 
   yyparse();
 }

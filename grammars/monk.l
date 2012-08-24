@@ -5,16 +5,19 @@
 #include "monk.tab.h"
 %}
 
-%x TITLE_STATE GET_COMMAND CLICK_COMMAND TYPE_COMMAND EXPECTATION
+%x TITLE_STATE GET_COMMAND CLICK_COMMAND TYPE_COMMAND 
+%x EXPECTATION TITLE_EXPECTATION ELEMENT_EXPECTATION BODY_EXPECTATION
 
 /**
-  This lexeme needs to be in the form of: -<WS>, *<WS>, 1.<WS>
+  Common Lexemes
 */
 LIST_MARKER ^([ \t]{0,3}(([\-|\*])|([0-9]{1,}\.))[ \t]+)
 HASH ^(#[ \t]+)
 BLANK_LINE ^([ \t]+)$
 WS ([ \t]+)
 MD_STRING_LITERAL ([\"|\'|_].+[\"|\'|_])
+/*[\$\-0-9a-zA-Z_]**/
+JS_IDENTIFIER ([\$_a-zA-Z]?[_\. a-zA-Z0-9]*)
 
 %%
 
@@ -27,7 +30,7 @@ MD_STRING_LITERAL ([\"|\'|_].+[\"|\'|_])
 
 
 {LIST_MARKER}("Open"|"Go"|"Go to"|"Goto"|"Fetch"|"Get")  { 
-	yy_push_state(GET_COMMAND); yylval.fetch=strdup(yytext); return FETCH;  }
+	yy_push_state(GET_COMMAND); return FETCH;  }
 <GET_COMMAND>{ 
 	((http[s]?\:\/\/)?[\-\_0-9a-zA-Z\.]+) { yylval.target=strdup(yytext); return TARGET;  }
 	([ \t]+)	{return WS;}
@@ -36,20 +39,20 @@ MD_STRING_LITERAL ([\"|\'|_].+[\"|\'|_])
 
 
 {LIST_MARKER}("Click"|"Click on") {
-	yy_push_state(CLICK_COMMAND); yylval.action=strdup(yytext); return CLICK;  }
+	yy_push_state(CLICK_COMMAND); return CLICK;  }
 <CLICK_COMMAND>{
-	([\$\-\_0-9a-zA-Z\.]+) { yylval.target=strdup(yytext); return TARGET;  }
+	{JS_IDENTIFIER} { yylval.target=strdup(yytext); return TARGET;  }
     ([ \t]+)	{return WS;}
     \n { yy_pop_state();}
 }
 
 
 {LIST_MARKER}("Type"|"Enter") {
-	yy_push_state(TYPE_COMMAND); yylval.action=strdup(yytext); return TYPE;  }
+	yy_push_state(TYPE_COMMAND); return TYPE;  }
 <TYPE_COMMAND>{
 	{MD_STRING_LITERAL} { yylval.text=strdup(yytext); return TEXT; }
 	("INTO"|"IN") { return IN; }
-	([\$\-\_0-9a-zA-Z\.]+) { yylval.target=strdup(yytext); return TARGET;  }
+	{JS_IDENTIFIER} { yylval.target=strdup(yytext); return TARGET;  }
 	([ \t]+)	{return WS;}
 	\n { yy_pop_state();}
 }
@@ -65,6 +68,20 @@ MD_STRING_LITERAL ([\"|\'|_].+[\"|\'|_])
 	([ \t]+)	{return WS;}
 	\n { yy_pop_state(); }
 }
+
+<TITLE_EXPECTATION>{
+	([ \t]+)	{return WS;}
+}
+
+<BODY_EXPECTATION>{
+	([ \t]+)	{return WS;}
+}
+
+<ELEMENT_EXPECTATION>{
+	([ \t]+)	{return WS;}
+}
+
+
 
 .|\n     /* eat up any unmatched character */
 

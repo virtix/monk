@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <curl/curl.h>
+#include <curl/easy.h>
 #define YYDEBUG 1
 #define YYERROR_VERBOSE
 int yylex (void);
@@ -79,23 +81,44 @@ command:
 
 
 fetch_command: 
-  | FETCH WS TARGET { printf("Command: Fetch URL = %s\n> ", $3);  } 
+  | FETCH WS TARGET { printf("Command: Fetch URL = %s\n> ", $3);  
+      CURL *curl;
+      CURLcode res;
+     
+      curl = curl_easy_init();
+      if(curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, $3);
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+     
+        /* Perform the request, res will get the return code */ 
+        res = curl_easy_perform(curl);
+        printf("%s\n", res);
+        /* Check for errors */ 
+        if(res != CURLE_OK)
+          fprintf(stderr, "curl_easy_perform() failed: %s\n",
+                  curl_easy_strerror(res));
+     
+        /* always cleanup */ 
+        curl_easy_cleanup(curl);
+      }
+
+  } 
   | command
   ;
 
 click_command: /**/
-  | CLICK WS TARGET { printf("Command: %s = %s\n> ", $1, $3); }
+  | CLICK WS TARGET { printf("Command: Click target = %s\n> ", $3); }
   | command
   ;
 
 text_command: /*optional*/
-  | TYPE WS TEXT WS IN WS TARGET { printf("Command: %s %s Into %s \n> ", $1, $3, $7); }
+  | TYPE WS TEXT WS IN WS TARGET { printf("Command: Type %s Into %s \n> ", $3, $7); }
   | command
   ;
 
 
 verify_command: /*optional*/
-  | ASSERT WS TARGET WS IS WS TEXT { printf("Command: %s %s Equals %s \n> ", $1, $3, $7); }
+  | ASSERT WS TARGET WS IS WS TEXT { printf("Command: Assert that %s Equals %s \n> ",  $3, $7); }
   | command
   ;  
 
@@ -117,8 +140,24 @@ tag: /*optional*/
 
 
 %%
-main() {
+
+extern FILE *yyin;
+extern int yy_scan_string(const char *);
+// extern void reset_lexer(void);
+// extern void reset_parser(void);
+
+int main(int argc,char** argv) {
   yydebug=1;
+
+  if ( argc == 2 ) {
+      yyin = fopen( argv[1], "r" );
+      // reset_lexer();
+      // reset_parser();
+      yyparse();
+      return(1);
+      /*Exit program  from here */
+    }
+
   printf("> "); 
   yyparse();
 }
