@@ -61,7 +61,7 @@ typedef union YYSTYPE
 {
 
 /* Line 2068 of yacc.c  */
-#line 21 "monk.y"
+#line 22 "src/grammars/markdown/monk-markdown.y"
 
   struct ast *a;
   char * prefix;
@@ -74,7 +74,7 @@ typedef union YYSTYPE
 
 
 /* Line 2068 of yacc.c  */
-#line 78 "monk.tab.h"
+#line 78 "src/grammars/markdown/monk-markdown.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

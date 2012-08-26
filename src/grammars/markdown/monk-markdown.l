@@ -1,8 +1,8 @@
 %option noyywrap case-insensitive yylineno  stack
-%option outfile="monk.lex.c"
+
 
 %{
-#include "monk.tab.h"
+#include "monk-markdown.tab.h"
 %}
 
 %x TITLE_STATE GET_COMMAND CLICK_COMMAND TYPE_COMMAND 
