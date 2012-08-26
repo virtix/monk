@@ -1,0 +1,3 @@
+[submodule "lib/ctest"]
+	path = lib/ctest
+	url = git@github.com:virtix/ctest.git
