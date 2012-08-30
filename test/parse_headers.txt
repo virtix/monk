@@ -1,0 +1,8 @@
+HTTP/1.1 302 Moved Temporarily
+Date: Wed, 29 Aug 2012 21:19:39 GMT
+Server: Jetty/5.1.x (Linux/3.2.0-29-generic amd64 java/1.6.0_24
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Cache-Control: no-cache
+Location: http://localhost:4444/wd/hub/session/1346266447472
+Content-Length: 0
+
