@@ -2,16 +2,18 @@
  * All curl_easy_setopt() options are documented at:
  * http://curl.haxx.se/libcurl/c/curl_easy_setopt.html
  ************************************************************************/
-#include <curl/curl.h>
+#include <stdlib.h>
 #include <string.h>
 #include <regex.h> 
+#include <curl/curl.h>
 
 void set_session_id(char * location_header);
 char * get_session_id();
 
-static char __session_id__[] = "00000000000000000000000000000000";
+static char * __session_id__ ;
+static CURL * __curl__;
 
-size_t write_callback(char *ptr, size_t size, size_t nmemb, void *stream)
+size_t init_callback(char *ptr, size_t size, size_t nmemb, void *stream)
 {
   
   char * token;
@@ -23,8 +25,7 @@ size_t write_callback(char *ptr, size_t size, size_t nmemb, void *stream)
   while(token != NULL) {
     if( strcmp(token,"Location") == 0){
       set_session_id(ptr);
-      // strcpy( __session_id__, ses_id );
-      printf("%s\n", get_session_id());
+      // printf("%s\n", get_session_id());
       return;
     }
     
@@ -34,9 +35,14 @@ size_t write_callback(char *ptr, size_t size, size_t nmemb, void *stream)
 }
 
 
-
-char* get_session_id(){
-   return __session_id__;
+/*
+  To Do: Synchronize access.
+*/
+char * get_session_id(){
+   char * _temp_;
+   asprintf (&_temp_, "%s", __session_id__);
+   free(__session_id__); //warning ...?
+   return _temp_;
 } 
 
 
@@ -45,42 +51,47 @@ void set_session_id(char * location_header){
   regex_t regex;
   regmatch_t pmatch[64];
   int loc, re;
-  re = regcomp(&regex, "/[0-9]+", REG_EXTENDED);
+  re = regcomp(&regex, "/([0-9]+)", REG_EXTENDED);
   loc = regexec(&regex, location_header, 1, pmatch, 0);
+  // printf("pmatch[0].rm_so %d\n", pmatch[0].rm_so);
+  // printf("pmatch[0].rm_eo %d\n", pmatch[0].rm_eo); 
   
-  //Should be synchronized for thread safety!
-  strncpy (__session_id__, location_header + pmatch[0].rm_so +1, pmatch[0].rm_eo - pmatch[0].rm_so);
-  __session_id__[pmatch[0].rm_eo - pmatch[0].rm_so] = '\0';
+  /*---------------------------------------------------------------
+          Pita-copy regex match to __session_id__
+
+    This shows my complete lack of understanding of C 
+    strings/pointers. It seems that some character (\0?) needs to
+    be stripped off the end of the re match. The above regex fails 
+    with $ (EOL), which is baffling. So, instead, we insert a non-
+    null terminated string segment into the desired URL.
+  ----------------------------------------------------------------*/
+  int chars_to_copy = pmatch[0].rm_eo - pmatch[0].rm_so-1;
+  int n = asprintf (&__session_id__, "%.*s", chars_to_copy, 1+location_header + pmatch[0].rm_so);  
+  __session_id__[strcspn ( __session_id__, "\n" )] = '\0';
+   
   regfree(&regex);
 }
  
 
-size_t my_read_func(void *ptr, size_t size, size_t nmemb, void *stream)
-{
-  return fread(ptr, size, nmemb, stream);
-}
 
-
-
-int main(int argc, char *argv[])
-{
+char * init(char * hub, char * desired_capabilities){
   CURLcode ret;
-  CURL *hnd = curl_easy_init();
-  curl_easy_setopt(hnd, CURLOPT_VERBOSE, 0);
-  curl_easy_setopt(hnd, CURLOPT_URL, "http://localhost:4444/wd/hub/session");
-  curl_easy_setopt(hnd, CURLOPT_NOPROGRESS, 1L);
-  curl_easy_setopt(hnd, CURLOPT_HEADER, 1L);
-  curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"desiredCapabilities\":{\"browserName\":\"firefox\",\"version\":\"\",\"platform\":\"ANY\",\"javascriptEnabled\":true}}");
-  curl_easy_setopt(hnd, CURLOPT_POSTFIELDSIZE_LARGE, (curl_off_t)-1);
-  curl_easy_setopt(hnd, CURLOPT_USERAGENT, "curl/7.22.0 (x86_64-pc-linux-gnu) libcurl/7.22.0 OpenSSL/1.0.1 zlib/1.2.3.4 libidn/1.23 librtmp/2.3");
-  curl_easy_setopt(hnd, CURLOPT_MAXREDIRS, 50L);
+  __curl__ = curl_easy_init();
+  curl_easy_setopt(__curl__, CURLOPT_VERBOSE, 0);
+  curl_easy_setopt(__curl__, CURLOPT_URL, "http://localhost:4444/wd/hub/session");
+  curl_easy_setopt(__curl__, CURLOPT_NOPROGRESS, 1L);
+  curl_easy_setopt(__curl__, CURLOPT_HEADER, 1L);
+  curl_easy_setopt(__curl__, CURLOPT_POSTFIELDS, "{\"desiredCapabilities\":{\"browserName\":\"firefox\",\"version\":\"\",\"platform\":\"ANY\",\"javascriptEnabled\":true}}");
+  curl_easy_setopt(__curl__, CURLOPT_POSTFIELDSIZE_LARGE, (curl_off_t)-1);
+  curl_easy_setopt(__curl__, CURLOPT_USERAGENT, "curl/7.22.0 (x86_64-pc-linux-gnu) libcurl/7.22.0 OpenSSL/1.0.1 zlib/1.2.3.4 libidn/1.23 librtmp/2.3");
+  curl_easy_setopt(__curl__, CURLOPT_MAXREDIRS, 50L);
   // Could we use CURLOPT_WRITEDATA for the sessionId?
-  // curl_easy_setopt(hnd, CURLOPT_WRITEDATA, outfile);
-  curl_easy_setopt(hnd, CURLOPT_WRITEFUNCTION, write_callback);
-  // curl_easy_setopt(hnd, CURLOPT_READFUNCTION, my_read_func);
+  // curl_easy_setopt(__curl__, CURLOPT_WRITEDATA, outfile);
+  curl_easy_setopt(__curl__, CURLOPT_WRITEFUNCTION, init_callback);
+  // curl_easy_setopt(__curl__, CURLOPT_READFUNCTION, my_read_func);
 
-  ret = curl_easy_perform(hnd);
-  curl_easy_cleanup(hnd);
+  ret = curl_easy_perform(__curl__);
+  curl_easy_cleanup(__curl__);
 
   /* Here is a list of options the curl code used that cannot get generated
      as source easily. You may select to either not use them or implement
@@ -97,7 +108,125 @@ int main(int argc, char *argv[])
   CURLOPT_SOCKOPTFUNCTION set to a functionpointer
   CURLOPT_SOCKOPTDATA set to a objectpointer
 
-  */
   return (int)ret;
+
+  return session_id?
+  */
+  //should return a copy
+  return get_session_id();
+}
+
+// curl -i --data '{"url"="http://google.com"}'  http://localhost:4444/wd/hub/session/1346240826525/url
+void fetch(char * session_id, char * url){
+  CURLcode ret_val;
+  __curl__ = curl_easy_init();
+  curl_easy_setopt(__curl__, CURLOPT_HEADER, 1L);
+  char * final;
+  asprintf (&final, "http://localhost:4444/wd/hub/session/%s/url", session_id);
+  printf("Fetching Google w/command: %s\n", final);
+  curl_easy_setopt(__curl__, CURLOPT_URL, final);
+  // curl_easy_setopt(__curl__, CURLOPT_NOPROGRESS, 1L);
+  // curl_easy_setopt(__curl__, CURLOPT_HEADER, 1L);
+  char * __url__;
+  asprintf (&__url__, "{\"url\"=\"%s\"}", url);
+  curl_easy_setopt(__curl__, CURLOPT_POSTFIELDS, __url__ );
+  
+  ret_val = curl_easy_perform(__curl__);
+  curl_easy_cleanup(__curl__);
+
+}
+
+
+
+/*
+- Type "monk" into q
+curl -i --data '{"using"="name","value"="q"}' http://localhost:4444/wd/hub/session/1346245302141/element/
+//Look for 'ELEMENT'='N' item in returned json 
+curl -i --data '{"value"=["t","h","e","l","o","n","i","o","u","s"," ", "m","o","n","k"]}' http://localhost:4444/wd/hub/session/1346245302141/element/0/value
+*/
+void type(){
+  CURLcode ret_val;
+  __curl__ = curl_easy_init();
+  curl_easy_setopt(__curl__, CURLOPT_HEADER, 1L);
+
+  char * final;
+  // Find the element by Name - this will be a separate function that will
+  // try by ID, Name, CSS, and Text Label or link text 
+  // (XPath will not be supported because it is stupid and ugly)
+  asprintf (&final, "http://localhost:4444/wd/hub/session/%s/element", __session_id__);
+  printf("Finding element \"q\": %s\n", final);
+  
+  curl_easy_setopt(__curl__, CURLOPT_URL, final);
+  curl_easy_setopt(__curl__, CURLOPT_POSTFIELDS, "{\"using\"=\"name\",\"value\"=\"q\"}");
+  
+  ret_val = curl_easy_perform(__curl__);
+
+
+  //Send Keys:
+  asprintf (&final, "http://localhost:4444/wd/hub/session/%s/element/0/value", __session_id__);
+  printf("Typing into search field: %s\n", final);
+  
+  curl_easy_setopt(__curl__, CURLOPT_URL, final);
+  curl_easy_setopt(__curl__, CURLOPT_POSTFIELDS, "{\"value\"=[\"t\",\"h\",\"e\",\"l\",\"o\",\"n\",\"i\",\"o\",\"u\",\"s\",\" \",\"m\",\"o\",\"n\",\"k\", \"\n\"]}" );
+  ret_val = curl_easy_perform(__curl__);
+
+  // asprintf (&final, "http://localhost:4444/wd/hub/session/%s/element", __session_id__);
+  // printf("Command URL w/session_id: %s\n", final);
+  
+  // curl_easy_setopt(__curl__, CURLOPT_URL, final);
+  // curl_easy_setopt(__curl__, CURLOPT_POSTFIELDS, "{\"using\"=\"id\",\"value\"=\"gbqfb\"}");
+  // ret_val = curl_easy_perform(__curl__);
+
+  //Click element:
+  // asprintf (&final, "http://localhost:4444/wd/hub/session/%s/element/1/click", __session_id__);
+  // printf("Command URL w/session_id: %s\n", final);
+  // curl_easy_setopt(__curl__, CURLOPT_POSTFIELDS, NULL);
+  // //
+
+  curl_easy_cleanup(__curl__);
+
+}
+
+
+void click_link(){
+  CURLcode ret_val;
+  __curl__ = curl_easy_init();
+  curl_easy_setopt(__curl__, CURLOPT_WRITEFUNCTION, NULL);
+
+  char * final;
+  asprintf (&final, "http://localhost:4444/wd/hub/session/%s/element/", __session_id__);
+  printf("Finding Theloniuous link element: %s\n", final);
+  
+  curl_easy_setopt(__curl__, CURLOPT_URL, final);
+  curl_easy_setopt(__curl__, CURLOPT_POSTFIELDS, "{\"using\"=\"partial link text\",\"value\"=\"Thelonious\"}");
+
+  ret_val = curl_easy_perform(__curl__);
+  
+  //Need to parse the JSON ELEMENT item to grab the ID to add below:
+
+  //Click element:
+  asprintf (&final, "http://localhost:4444/wd/hub/session/%s/element/2/click", __session_id__);
+  printf("Clicking link element: %s\n", final);
+  curl_easy_setopt(__curl__, CURLOPT_POSTFIELDS, NULL);
+
+  ret_val = curl_easy_perform(__curl__);
+  curl_easy_cleanup(__curl__);
+
+}
+
+
+
+int main(int argc, char *argv[]){
+  char * session_id;
+  char *  hub;
+  char * desired_capabilities;
+  
+  session_id = init( hub, desired_capabilities ); 
+  
+  puts(session_id);
+  fetch( session_id, "http://google.com" );
+  // type();
+  // click_link();
+
 }
 /**** End of sample code ****/
